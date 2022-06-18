@@ -1,13 +1,52 @@
 {% extends "base_template.html" %}
 
+{% block header %}
+
+    <script defer>
+        $( document ).ready(function() {
+            let fadeOffset = 800
+            $('#heading').children().each(function(i) {
+                $(this).delay(fadeOffset).css('opacity',0).animate({opacity:1}, 1000).toggleClass("invisible")
+                fadeOffset += 200 + ((i+1) * 300)
+            })
+        });
+    </script>
+
+
+{% endblock %}
+
 {% block main %}
 
-    This is the main page.
+    <div class="mx-auto my-12 w-[20%]">
+        <img class="object-cover rounded-2xl" src="{{ url_for('static', filename='images/me.png') }}" alt="That's a picture of me!">
+    </div>
     
-    Go to the <a href="{{ url_for('index_bp.about') }}">about page.</a>
+    <div id="heading" class="text-center">
+        <h1 class="main-title text-6xl invisible">
+            <span class="text-gray-500">Artur</span> <span class="text-gray-900">Galstyan</span>
+        </h1>
+        <h2 class="text-5xl typewriter invisible">
+            A.I. Researcher
+        </h2>
+        <h3 class="text-2xl invisible">
+            Fullstack Developer
+        </h3>
+        <h4 class="text-lg invisible">
+            Cloud Engineer
+        </h4>
+        <h5 class="invisible">
+            Part-Time Musician
+        </h5>
+        <h6 class="text-sm invisible">
+            YouTuber?
+        </h6>
+        <div class="text-xs invisible">
+            Blogger?
+        </div>
+    </div>
+    hi!
 
-    <br> <br>
 
-    Or you can visit the <a href="{{ url_for('blog_bp.home') }}">blog!</a>
-
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}

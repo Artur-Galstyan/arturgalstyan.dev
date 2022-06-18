@@ -1,0 +1,8 @@
+steps:
+  # Install dependencies
+  - name: python
+    entrypoint: pip
+    args: ["install", "-r", "requirements.txt", "--user"]
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 600s

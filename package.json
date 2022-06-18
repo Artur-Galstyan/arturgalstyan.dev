@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "watch-css": "npx tailwindcss -i static/src/css/input.css -o static/dist/css/output.css --watch",
+    "watch-css": "npx tailwindcss -i static/src/css/input.css -o static/css/output.css --watch",
     "build-css": "tailwindcss build -i src/css/input.css -o static/css/output.css --minify"
   },
   "devDependencies": {
