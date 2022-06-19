@@ -7,7 +7,7 @@
             let fadeOffset = 800
             $('#heading').children().each(function(i) {
                 $(this).delay(fadeOffset).css('opacity',0).animate({opacity:1}, 1000).toggleClass("invisible")
-                fadeOffset += 200 + ((i+1) * 300)
+                fadeOffset += 200 + ((i+1) * 100)
             })
         });
     </script>
@@ -17,34 +17,52 @@
 
 {% block main %}
 
-    <div class="mx-auto my-12 w-[20%]">
+    <div class="mx-auto my-8 w-[50%] md:w-[20%]">
         <img class="object-cover rounded-2xl" src="{{ url_for('static', filename='images/me.png') }}" alt="That's a picture of me!">
     </div>
     
     <div id="heading" class="text-center">
-        <h1 class="main-title text-6xl invisible">
+        <h1 class="main-title text-4xl md:text-6xl invisible">
             <span class="text-gray-500">Artur</span> <span class="text-gray-900">Galstyan</span>
         </h1>
-        <h2 class="text-5xl typewriter invisible">
+        <h2 class="text-3xl md:text-5xl my-4 typewriter invisible">
             A.I. Researcher
         </h2>
-        <h3 class="text-2xl invisible">
+        <h3 class="text-2xl md:text-3xl invisible">
             Fullstack Developer
         </h3>
-        <h4 class="text-lg invisible">
+        <h4 class="text-xl md:text-lg invisible">
             Cloud Engineer
         </h4>
-        <h5 class="invisible">
-            Part-Time Musician
+        <h5 class="text-sm invisible">
+            Beginner Violinist
         </h5>
-        <h6 class="text-sm invisible">
-            YouTuber?
+        <h6 class="text-xs invisible">
+            YouTuber
         </h6>
-        <div class="text-xs invisible">
-            Blogger?
+    </div>
+
+    <div class="flex justify-center my-12">
+        <a href="mailto:mail@arturgalstyan.dev" class="w-[50%] md:w-[15%] rounded-lg bg-blue-500 text-white hover:bg-green-600 duration-300 transition ease-in-out">
+            <div class="m-4 text-xl text-center roboto">
+                Contact me
+            </div>
+        </a>
+    </div>
+
+    <div class="flex justify-center">
+        <div class="md:w-[35%] w-full flex justify-evenly">
+            <a href="https://github.com/Artur-Galstyan/">
+                <ion-icon class="very-large text-gray-700" name="logo-github"></ion-icon>
+            </a>
+            <a href="https://www.linkedin.com/in/artur-galstyan-262842204/">
+                <ion-icon class="very-large text-blue-400" name="logo-linkedin"></ion-icon>
+            </a>
+            <a href="https://www.youtube.com/channel/UCZUnp_UT1c6jTELYx4AAN4Q">
+                <ion-icon class="very-large text-red-500" name="logo-youtube"></ion-icon>
+            </a>
         </div>
     </div>
-    hi!
 
 
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

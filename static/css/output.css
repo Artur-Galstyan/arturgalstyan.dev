@@ -2,6 +2,8 @@
 
 @import url("https://fontlibrary.org//face/cmu-typewriter");
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 /*
 ! tailwindcss v3.0.23 | MIT License | https://tailwindcss.com
 */
@@ -472,7 +474,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-sepia:  ;
 }
 
-h1.main-title {
+.main-title {
   font-family: cubano, sans-serif;
   font-weight: 400;
   font-style: normal;
@@ -484,8 +486,12 @@ h1.main-title {
   font-style: normal;
 }
 
-.visible{
-  visibility: visible;
+.roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+ion-icon.very-large {
+  font-size: 48px;
 }
 
 .invisible{
@@ -496,9 +502,23 @@ h1.main-title {
   position: static;
 }
 
+.m-4{
+  margin: 1rem;
+}
+
 .mx-auto{
   margin-left: auto;
   margin-right: auto;
+}
+
+.my-8{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.my-4{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .my-12{
@@ -510,16 +530,46 @@ h1.main-title {
   display: block;
 }
 
-.hidden{
-  display: none;
+.flex{
+  display: flex;
 }
 
-.w-\[20\%\]{
-  width: 20%;
+.w-\[50\%\]{
+  width: 50%;
+}
+
+.w-\[35\%\]{
+  width: 35%;
+}
+
+.w-full{
+  width: 100%;
+}
+
+.justify-center{
+  justify-content: center;
+}
+
+.justify-evenly{
+  justify-content: space-evenly;
 }
 
 .rounded-2xl{
   border-radius: 1rem;
+}
+
+.rounded-lg{
+  border-radius: 0.5rem;
+}
+
+.bg-blue-400{
+  --tw-bg-opacity: 1;
+  background-color: rgb(96 165 250 / var(--tw-bg-opacity));
+}
+
+.bg-blue-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 
 .object-cover{
@@ -531,14 +581,14 @@ h1.main-title {
   text-align: center;
 }
 
-.text-6xl{
-  font-size: 3.75rem;
-  line-height: 1;
+.text-4xl{
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
-.text-5xl{
-  font-size: 3rem;
-  line-height: 1;
+.text-3xl{
+  font-size: 1.875rem;
+  line-height: 2.25rem;
 }
 
 .text-2xl{
@@ -546,8 +596,8 @@ h1.main-title {
   line-height: 2rem;
 }
 
-.text-lg{
-  font-size: 1.125rem;
+.text-xl{
+  font-size: 1.25rem;
   line-height: 1.75rem;
 }
 
@@ -571,7 +621,92 @@ h1.main-title {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
+.text-white{
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
 .text-blue-400{
   --tw-text-opacity: 1;
   color: rgb(96 165 250 / var(--tw-text-opacity));
+}
+
+.text-gray-400{
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+
+.text-gray-700{
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.text-red-300{
+  --tw-text-opacity: 1;
+  color: rgb(252 165 165 / var(--tw-text-opacity));
+}
+
+.text-red-400{
+  --tw-text-opacity: 1;
+  color: rgb(248 113 113 / var(--tw-text-opacity));
+}
+
+.text-red-500{
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
+.transition{
+  transition-property: color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.duration-300{
+  transition-duration: 300ms;
+}
+
+.ease-in-out{
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover\:bg-green-600:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+}
+
+@media (min-width: 768px){
+  .md\:w-\[20\%\]{
+    width: 20%;
+  }
+
+  .md\:w-\[15\%\]{
+    width: 15%;
+  }
+
+  .md\:w-\[35\%\]{
+    width: 35%;
+  }
+
+  .md\:text-6xl{
+    font-size: 3.75rem;
+    line-height: 1;
+  }
+
+  .md\:text-5xl{
+    font-size: 3rem;
+    line-height: 1;
+  }
+
+  .md\:text-3xl{
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .md\:text-lg{
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
 }
