@@ -1,7 +1,6 @@
 @import url("https://use.typekit.net/bur0ngk.css");
-@import url("https://fontlibrary.org//face/cmu-typewriter");
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -15,14 +14,12 @@
         font-style: normal;
     }
 
-    .typewriter {
-        font-family: 'CMUTypewriterTextRegular', serif;
-        font-weight: bold;
-        font-style: normal;
+    .merriweather {
+        font-family: 'Merriweather', serif;
     }
 
-    .roboto {
-        font-family: 'Roboto', sans-serif;
+    body {
+        font-family: 'Fira Code', monospace;
     }
 
     ion-icon.very-large {
