@@ -25,4 +25,12 @@
     ion-icon.very-large {
         font-size: 48px;
     }
+
+    a {
+        @apply text-blue-500;
+    }
+
+    h1 {
+        @apply mt-8 text-2xl text-left;
+    }
 }

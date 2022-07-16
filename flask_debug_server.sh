@@ -1,3 +1,3 @@
 export FLASK_APP=main
 export FLASK_ENV=development
-python -m flask run
+(trap 'kill 0' SIGINT; npm run watch-css & python -m flask run )

@@ -582,12 +582,84 @@ ion-icon.very-large {
   font-size: 48px;
 }
 
+a{
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
+h1{
+  margin-top: 2rem;
+  text-align: left;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
 .invisible{
   visibility: hidden;
 }
 
 .static{
   position: static;
+}
+
+.fixed{
+  position: fixed;
+}
+
+.absolute{
+  position: absolute;
+}
+
+.top-0{
+  top: 0px;
+}
+
+.left-0{
+  left: 0px;
+}
+
+.left-\[50\%\]{
+  left: 50%;
+}
+
+.top-\[-50\%\]{
+  top: -50%;
+}
+
+.top-\[50\%\]{
+  top: 50%;
+}
+
+.top-\[40\%\]{
+  top: 40%;
+}
+
+.left-\[40\%\]{
+  left: 40%;
+}
+
+.left-\[45\%\]{
+  left: 45%;
+}
+
+.top-\[45\%\]{
+  top: 45%;
+}
+
+.top-\[30\%\]{
+  top: 30%;
+}
+
+.top-\[35\%\]{
+  top: 35%;
+}
+
+.left-\[47\.5\%\]{
+  left: 47.5%;
+}
+
+.z-50{
+  z-index: 50;
 }
 
 .m-4{
@@ -624,14 +696,18 @@ ion-icon.very-large {
   margin-right: 20%;
 }
 
+.my-auto{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
 .mx-12{
   margin-left: 3rem;
   margin-right: 3rem;
 }
 
-.my-auto{
-  margin-top: auto;
-  margin-bottom: auto;
+.mt-16{
+  margin-top: 4rem;
 }
 
 .block{
@@ -644,6 +720,14 @@ ion-icon.very-large {
 
 .flex{
   display: flex;
+}
+
+.hidden{
+  display: none;
+}
+
+.h-full{
+  height: 100%;
 }
 
 .w-\[50\%\]{
@@ -660,6 +744,21 @@ ion-icon.very-large {
 
 .w-\[80\%\]{
   width: 80%;
+}
+
+.translate-x-\[50\%\]{
+  --tw-translate-x: 50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-\[-50\%\]{
+  --tw-translate-y: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-y-\[50\%\]{
+  --tw-translate-y: 50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .justify-center{
@@ -686,6 +785,11 @@ ion-icon.very-large {
 .bg-emerald-600{
   --tw-bg-opacity: 1;
   background-color: rgb(5 150 105 / var(--tw-bg-opacity));
+}
+
+.bg-white{
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
 .object-cover{
@@ -775,11 +879,6 @@ ion-icon.very-large {
   color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 
-.text-blue-500{
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
-}
-
 .text-blue-600{
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
@@ -805,25 +904,9 @@ ion-icon.very-large {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.hover\:scale-110:hover{
-  --tw-scale-x: 1.1;
-  --tw-scale-y: 1.1;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .hover\:scale-125:hover{
   --tw-scale-x: 1.25;
   --tw-scale-y: 1.25;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.hover\:scale-x-110:hover{
-  --tw-scale-x: 1.1;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.hover\:scale-x-125:hover{
-  --tw-scale-x: 1.25;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
@@ -852,16 +935,6 @@ ion-icon.very-large {
   color: rgb(153 27 27 / var(--tw-text-opacity));
 }
 
-.hover\:text-green-400:hover{
-  --tw-text-opacity: 1;
-  color: rgb(74 222 128 / var(--tw-text-opacity));
-}
-
-.hover\:text-green-500:hover{
-  --tw-text-opacity: 1;
-  color: rgb(34 197 94 / var(--tw-text-opacity));
-}
-
 .hover\:text-green-800:hover{
   --tw-text-opacity: 1;
   color: rgb(22 101 52 / var(--tw-text-opacity));
@@ -887,6 +960,10 @@ ion-icon.very-large {
 
   .md\:w-\[80\%\]{
     width: 80%;
+  }
+
+  .md\:w-\[70\%\]{
+    width: 70%;
   }
 
   .md\:text-6xl{
@@ -918,5 +995,19 @@ ion-icon.very-large {
 @media (min-width: 1024px){
   .lg\:w-\[15\%\]{
     width: 15%;
+  }
+
+  .lg\:w-\[50\%\]{
+    width: 50%;
+  }
+}
+
+@media (min-width: 1536px){
+  .\32xl\:w-\[35\%\]{
+    width: 35%;
+  }
+
+  .\32xl\:w-\[30\%\]{
+    width: 30%;
   }
 }

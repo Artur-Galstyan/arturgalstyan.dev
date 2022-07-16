@@ -3,19 +3,31 @@
 {% block header %}
 
 <script defer>
-    $(document).ready(function () {
-        let fadeOffset = 800
+
+    function fadeInText() {
+        let fadeOffset = 0
         $('#heading').children().each(function (i) {
             $(this).delay(fadeOffset).css('opacity', 0).animate({ opacity: 1 }, 1000).toggleClass("invisible")
             fadeOffset += 200 + ((i + 1) * 100)
         })
+    }
+    $(document).ready(function () {
+
+    });
+    $(window).on("load", function () {
+        setTimeout(() => {
+            $('#spinner').fadeOut(duration = 500, fadeInText)
+        }, 250);
     });
 </script>
 
 
 {% endblock %}
 
+
+
 {% block main %}
+{% include 'spinner.html' %}
 
 <div class="mx-auto my-8 w-[50%] md:w-[20%]">
     <img class="object-cover rounded-2xl" src="{{ url_for('static', filename='images/me.png') }}"
@@ -23,9 +35,9 @@
 </div>
 
 <div id="heading" class="text-center">
-    <h1 class="main-title text-4xl md:text-6xl invisible">
+    <div class="main-title text-4xl md:text-6xl invisible">
         <span class="text-gray-500">Artur</span> <span class="text-gray-900">Galstyan</span>
-    </h1>
+    </div>
     <h2 class="main text-3xl md:text-5xl my-4 invisible font-bold">
         A.I. Researcher
     </h2>
