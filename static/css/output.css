@@ -594,16 +594,17 @@ h1{
   line-height: 2rem;
 }
 
+.tooltip{
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+
 .invisible{
   visibility: hidden;
 }
 
 .static{
   position: static;
-}
-
-.fixed{
-  position: fixed;
 }
 
 .absolute{
@@ -618,52 +619,16 @@ h1{
   left: 0px;
 }
 
-.left-\[50\%\]{
-  left: 50%;
-}
-
-.top-\[-50\%\]{
-  top: -50%;
-}
-
-.top-\[50\%\]{
-  top: 50%;
-}
-
-.top-\[40\%\]{
-  top: 40%;
-}
-
-.left-\[40\%\]{
-  left: 40%;
-}
-
-.left-\[45\%\]{
-  left: 45%;
-}
-
-.top-\[45\%\]{
-  top: 45%;
-}
-
-.top-\[30\%\]{
-  top: 30%;
-}
-
-.top-\[35\%\]{
-  top: 35%;
-}
-
-.left-\[47\.5\%\]{
-  left: 47.5%;
-}
-
 .z-50{
   z-index: 50;
 }
 
 .m-4{
   margin: 1rem;
+}
+
+.m-auto{
+  margin: auto;
 }
 
 .mx-auto{
@@ -746,21 +711,6 @@ h1{
   width: 80%;
 }
 
-.translate-x-\[50\%\]{
-  --tw-translate-x: 50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-y-\[-50\%\]{
-  --tw-translate-y: -50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-.translate-y-\[50\%\]{
-  --tw-translate-y: 50%;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .justify-center{
   justify-content: center;
 }
@@ -830,6 +780,11 @@ h1{
   line-height: 1.75rem;
 }
 
+.text-lg{
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
 .text-sm{
   font-size: 0.875rem;
   line-height: 1.25rem;
@@ -838,11 +793,6 @@ h1{
 .text-xs{
   font-size: 0.75rem;
   line-height: 1rem;
-}
-
-.text-lg{
-  font-size: 1.125rem;
-  line-height: 1.75rem;
 }
 
 .font-bold{
@@ -981,14 +931,14 @@ h1{
     line-height: 2.25rem;
   }
 
-  .md\:text-lg{
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-
   .md\:text-2xl{
     font-size: 1.5rem;
     line-height: 2rem;
+  }
+
+  .md\:text-lg{
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
 }
 
@@ -1003,10 +953,6 @@ h1{
 }
 
 @media (min-width: 1536px){
-  .\32xl\:w-\[35\%\]{
-    width: 35%;
-  }
-
   .\32xl\:w-\[30\%\]{
     width: 30%;
   }

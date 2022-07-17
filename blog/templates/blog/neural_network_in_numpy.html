@@ -11,9 +11,7 @@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <script defer>
-    $(document).ready(function () {
 
-    });
     $(window).on("load", function () {
         setTimeout(() => {
             $('#spinner').fadeOut(duration = 500)
@@ -123,6 +121,31 @@
         <h1>
             Forward Propagation
         </h1>
+        We had already mentioned the matrix multiplication in the previous section, where the first layer is multiplied
+        with the weight matrix and the bias is added on top, which in turn produces the values of the next layer. But
+        there is one part missing, namely the activation function. NNs are nonlinear function approximators, which is
+        due to these nonlinear activation functions. Let's write this down in math. First, let's give each of our layers
+        an index:
+        <img src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/nn_index.jpg') }}"
+            alt="Neural Network Layer Indices" />
+
+        Let $a_0 = X$, which means that $a_0$ has the shape of $m \times n$, where $m$ is the number of training
+        examples and $n$ is the number of features. Now, $a_1$ refers to the activation of the hidden layer $H_1$, but
+        first, let's compute what we already talked about in the previous section.
+
+        $$
+        z_1 = a_0 \cdot W_{0 \rightarrow 1} + b_{1}
+        $$
+
+        Here, $z_1$ is the result of the multiplication between the activation of the
+        <span class='tooltip' data-tippy-content="Which is the <b>input</b> layer, but note that $a_0 = X$">previous
+            layer</span>
+        and the weights between layer 0 and 1 (the input layer and the hidden layer). The bias is added on top.
+
+
+
+
+
     </div>
 
 </div>

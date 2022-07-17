@@ -11,6 +11,30 @@
     <title>Artur Galstyan</title>
     {% block header %}
     {% endblock %}
+
+    <script defer>
+        $(document).ready(function () {
+
+
+            $('.tooltip').on('shown.bs.tooltip', function () {
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            })
+
+
+            let allTooltips = $('.tooltip')
+
+            allTooltips.each(function (index) {
+                let item = $(this).get()
+                tippy(item,
+                    {
+                        content: item.innerHTML,
+                        allowHTML: true
+                    });
+            })
+
+
+        })
+    </script>
 </head>
 
 <body>
@@ -21,6 +45,8 @@
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
 </body>
 
 </html>

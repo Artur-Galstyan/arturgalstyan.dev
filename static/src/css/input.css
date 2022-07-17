@@ -33,4 +33,10 @@
     h1 {
         @apply mt-8 text-2xl text-left;
     }
+
+    .tooltip {
+        @apply text-blue-500;
+    }
+
+
 }
