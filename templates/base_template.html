@@ -8,6 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css"
+        integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfRI7mLTdk1wblIUnrIq35nqwEvC" crossorigin="anonymous">
+
     <title>Artur Galstyan</title>
     {% block header %}
     {% endblock %}
@@ -15,10 +19,50 @@
     <script defer>
         $(document).ready(function () {
 
+            let delimiters = [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ]
+            renderMathInElement(document.body, {
+                delimiters: delimiters,
+                // • rendering keys, e.g.:
+                throwOnError: false
+            });
+            const macros = {};
 
-            $('.tooltip').on('shown.bs.tooltip', function () {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+            $('[data-tippy-content]').each(function (index) {
+                let content = $(this).data()['tippyContent']
+                let allInstances = []
+
+                for (let i = 0; i < content.length; i++) {
+                    let temp = ""
+                    if (content[i] == "$") {
+                        i += 1
+                        while (content[i] != "$") {
+                            temp += content[i]
+                            i += 1
+                        }
+                        i += 1
+                        allInstances.push(temp)
+                    }
+                }
+                let toReplace = {}
+                for (let instance of allInstances) {
+                    var html = katex.renderToString(instance, {
+                        throwOnError: false
+                    });
+                    toReplace['$' + instance + '$'] = html
+                }
+
+                for (var key in toReplace) {
+                    content = content.replace(key, toReplace[key])
+                }
+
+                $(this).attr('data-tippy-content', content)
             })
+
 
 
             let allTooltips = $('.tooltip')
@@ -43,6 +87,14 @@
 
     {% endblock %}
 
+
+
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"
+        integrity="sha384-X/XCfMm41VSsqRNQgDerQczD69XqmjOOOwYQvr/uuC+j4OPoNhVgjdGFwhvN02Ja"
+        crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"
+        integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"
+        crossorigin="anonymous"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
