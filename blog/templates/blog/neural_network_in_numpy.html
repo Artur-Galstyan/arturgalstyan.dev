@@ -1,16 +1,16 @@
 {% extends "base_template.html" %}
 
 {% block header %}
-<script>
-    //MathJax = {
-      //  tex: {
-        //    inlineMath: [['$', '$'], ['\\(', '\\)']]
-        //}
-    //};
-</script>
-<!--<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>-->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 <script defer>
+
+    function performScroll(element, duration = 1500) {
+        console.log(element)
+        $("html, body").animate({ scrollTop: element.offset().top }, duration);
+
+    }
 
     $(window).on("load", function () {
         setTimeout(() => {
@@ -25,7 +25,7 @@
 {% block main %}
 {% include 'navbar.html' %}
 {% include 'spinner.html' %}
-<div class="w-[80%] md:w-[70%] lg:w-[50%] 2xl:w-[30%] mx-auto mt-16">
+<div class="w-[80%] md:w-[70%] lg:w-[50%] 2xl:w-[40%] mx-auto mt-16">
     <div class="text-3xl text-blue-600">
         A Neural Network Coded in Numpy
     </div>
@@ -103,7 +103,7 @@
         $$
         where $W_{X \rightarrow H_1}$ has the shape $n \times h_1$ and $b_{H_1}$ is the bias has the same shape as
         $H_1$.
-        <img src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/x_w1.jpg') }}"
+        <img id="x_w1" src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/x_w1.jpg') }}"
             alt="First Matrix Multiplication">
 
         Similarly, the weight matrix between the hidden layer $H_1$ and the output layer $O$ has the shape
@@ -140,10 +140,53 @@
         Here, $z_1$ is the result of the multiplication between the activation of the
         <span class='tooltip' data-tippy-content="Which is the <b>input</b> layer, but note that $a_0 = X$">previous
             layer</span>
-        and the weights between layer 0 and 1 (the input layer and the hidden layer). The bias is added on top.
+        and the weights between layer 0 and 1 (the input layer and the hidden layer). The bias is added on top. Now, the
+        activation of the layer $H_1$ is
+        $$
+        a_1 = \sigma (z_1),
+        $$
+        where $\sigma$ is any nonlinear activation function, such as e.g. <i><a
+                href="https://en.wikipedia.org/wiki/Rectifier_(neural_networks)">ReLU</a></i> or the <i><a
+                href="https://en.wikipedia.org/wiki/Sigmoid_function#:~:text=8%20External%20links-,Definition,refer%20to%20the%20same%20object.">Sigmoid</a></i>
+        function:
 
+        <div class="flex justify-center">
+            <img class="w-[50%]"
+                src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/relu.png') }}"
+                alt="The ReLU Function">
+            <img class="w-[50%]"
+                src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/sigmoid.png') }}"
+                alt="The Sigmoid Function">
+        </div>
 
+        <div class="text-sm text-gray-600 text-center mb-4">
+            ReLU on the left and Sigmoid on the right.
+        </div>
 
+        The shape of $a_1$ is $m \times h_1$, where $h_1$ is the <span class='tooltip'
+            data-tippy-content="I keep repeating this so much to really hammer in the notation that we're using">number
+            of hidden neurons.</span> For our last layer $O$, we repeat the process:
+
+        $$
+        \begin{align*}
+
+        z_2 &= a_1 \cdot W_{1 \rightarrow 2} + b_{2}\\
+        a_2 &= \sigma (z_2),
+
+        \end{align*}
+        $$
+
+        where the shape of $a_2$ is $m \times o$. If you need a refresher on the shapes of the matrices, have a look at
+        the <span class="text-green-500 cursor-pointer" onclick="performScroll($('#x_w1'), 500)">matrix
+            multiplications</span> again.
+
+        <h1>The Code So Far</h1>
+        Let's code out what we have learned about so far. I assume that you have already a bit of Python experience and
+        that you have <a href="https://numpy.org">Numpy</a> already installed. First, let's import Numpy and define the
+        architecture of our NN.
+        <pre><code>import numpy as np
+
+</code></pre>
 
 
     </div>
