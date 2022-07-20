@@ -38,5 +38,11 @@
         @apply text-blue-500;
     }
 
+    pre {
+        @apply my-4;
+    }
 
+    span>pre>code.hljs {
+        display: inline;
+    }
 }

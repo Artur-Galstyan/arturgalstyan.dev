@@ -599,6 +599,15 @@ h1{
   color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
+pre{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+span>pre>code.hljs {
+  display: inline;
+}
+
 .invisible{
   visibility: hidden;
 }
@@ -687,6 +696,10 @@ h1{
   display: inline-block;
 }
 
+.inline{
+  display: inline;
+}
+
 .flex{
   display: flex;
 }
@@ -715,8 +728,8 @@ h1{
   width: 80%;
 }
 
-.w-\[45\%\]{
-  width: 45%;
+.transform{
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .cursor-pointer{
@@ -851,11 +864,6 @@ h1{
   color: rgb(75 85 99 / var(--tw-text-opacity));
 }
 
-.text-blue-500{
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
-}
-
 .text-green-500{
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity));
@@ -980,10 +988,6 @@ h1{
 }
 
 @media (min-width: 1536px){
-  .\32xl\:w-\[30\%\]{
-    width: 30%;
-  }
-
   .\32xl\:w-\[40\%\]{
     width: 40%;
   }
