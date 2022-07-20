@@ -7,7 +7,6 @@
 <script defer>
 
     function performScroll(element, duration = 1500) {
-        console.log(element)
         $("html, body").animate({ scrollTop: element.offset().top }, duration);
 
     }
@@ -124,7 +123,7 @@
         With that we have defined the main parameters of our NN, which are the weights and biases and also how the
         matrix multiplication in a NN is performed. Let's dive into more detail next.
 
-        <h1>
+        <h1 id="forward-propagation">
             Forward Propagation
         </h1>
         We had already mentioned the matrix multiplication in the previous section, where the first layer is multiplied
@@ -186,7 +185,7 @@
         the <span class="text-green-500 cursor-pointer" onclick="performScroll($('#x_w1'), 500)">matrix
             multiplications</span> again.
 
-        <h1>The Code So Far</h1>
+        <h1>Coding - Part 1: Data</h1>
         Let's code out what we have learned about so far. I assume that you have already a bit of Python experience and
         that you have <a href="https://numpy.org">Numpy</a> already installed. First, let's import Numpy and define the
         architecture of our NN.
@@ -268,10 +267,78 @@ X_train, y_train, X_test, y_test = get_mnist()
         it because we want to test the ability of the NN to <b>generalise</b> to new, never-seen before data. If the NN
         already saw the validation data during training it would effectively memorise the data and not generalise.
         <br><br>
-        Next, we normalise the data, because as it was in its raw state, the values ranged from $[0, 255]$, which is the
-        "darkness" of a pixel. The higher the value, the darker the pixel. We normalise the data into the range of $[0,
-        1]$. No information is lost here, it's just that NNs tend to be unstable when large numbers are involved. You
+        Next, we normalise the data, because as it was in its raw state, the values ranged from [0, 255], which is the
+        "darkness" of a pixel. The higher the value, the darker the pixel. We normalise the data into the range of [0,
+        1]. No information is lost here, it's just that NNs tend to be unstable when large numbers are involved. You
         can test that yourself by not performing the normalisation step and see what happens!
+        <br><br>
+        Now that we have the data ready, let's actually have a look at what's inside. Each handwritten digit is a
+        28x28 image; hence our NN has <span class='tooltip'
+            data-tippy-content='$28^2 = 784$; The 2-D (28x28) array is flattened into a 1-D (1x784) array'>784
+            input
+            nodes.</span>
+        Here's an example of what these digits look like
+        <pre><code>import matplotlib.pyplot as plt
+
+X_train, y_train, X_test, y_test = get_mnist()
+# Get from the first batch the first example and shape it back to its original form of 28x28 pixels
+example = X_train[0][0].reshape(28, 28)
+# Get the corresponding target value. Since its a one hot encoded array, we use argmax.
+example_target = np.argmax(y_train[0][0])
+
+plt.imshow(example)
+plt.title(f"It's a {example_target}!")
+plt.show()
+</code></pre>
+        <img class="my-4 md:w-[60%] mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/athree.png') }}"
+            alt="It's a 3!">
+
+        And we are going to build a NN which will be able to identify these numbers just by looking at their pixel
+        values. Perhaps you are a little confused as to what "one-hot encoding" means. Initially, the data was a 28x28
+        pixel image and the target was a simple string, e.g. "3". In the end we want to have a probability estimate from
+        the NN, e.g. how confident is the NN that the given number is a 3. Therefore we map all possible classes to an
+        array and set one value in the array to 1 (hence the name, one element in the array is "hot").
+        <br><br>
+        Doing that makes sense. If the given number is a 3 and we make the target look like this
+        <pre><code>[0 0 0 1 0 0 0 0 0 0]</code></pre>then we essentially tell the NN to be as confident as possible
+        that this particular example is a 3. Hopefully, that was understandable (and if not, you can <a
+            href="mailto:mail@arturgalstyan.dev">shoot me a mail</a>).
+
+        <h1>
+            Coding - Part 2: Weights and Biases
+        </h1>
+
+        In the previous section we defined the architecture of our NN and prepared our data. Now, we need to actually
+        create the weights and biases of our NN. To do that, we need to iterate over our architecture dictionary and
+        initialize the weight and bias matrices.
+        <pre><code>def initialise_weights_and_biases(nn_architecture):
+parameters = {}
+for idx, layer in enumerate(nn_architecture):
+    n_input = layer["in"]
+    n_output = layer["out"]
+
+    parameters[f"weights {idx}->{idx+1}"] = np.random.randn(n_input, n_output) * 0.1
+    parameters[f"bias {idx+1}"] = (
+        np.random.randn(
+            n_output,
+        )
+        * 0.1
+    )
+
+return parameters
+</code></pre>
+        In the NN architecture we had also defined the activation functions, so let's also code them out.
+        <pre><code>def sigmoid(Z):
+    return 1 / (1 + np.exp(-Z))
+    
+    
+def relu(Z):
+    return np.maximum(0, Z)
+</code></pre>
+        With this, everything should be ready for coding out the forward propagation of the NN as <span
+            class="text-green-500 cursor-pointer" onclick="performScroll($('#forward-propagation'), 500)">discussed
+            earlier</span>.
     </div>
 
 </div>

@@ -951,6 +951,10 @@ span>pre>code.hljs {
     width: 70%;
   }
 
+  .md\:w-\[60\%\]{
+    width: 60%;
+  }
+
   .md\:text-6xl{
     font-size: 3.75rem;
     line-height: 1;
