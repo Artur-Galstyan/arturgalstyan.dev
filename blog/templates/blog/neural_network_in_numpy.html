@@ -106,8 +106,10 @@
         $$
         X \cdot W_{X \rightarrow H_1} + b_{H_1},
         $$
-        where $W_{X \rightarrow H_1}$ has the shape $n \times h_1$ and $b_{H_1}$ is the bias has the same shape as
-        $H_1$.
+        where $W_{X \rightarrow H_1}$ has the shape $n \times h_1$ and $b_{H_1}$ is the bias has the shape $[h_1,]$. Now
+        that is a strange shape to have, since strictly mathematically speaking, a shape like that doesn't exist. But
+        Numpy will perform a broadcast, we the same bias is added to all training examples, which is exactly what we
+        want. We will get into more detail about broadcasting later.
         <img id="x_w1" src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/x_w1.jpg') }}"
             alt="First Matrix Multiplication">
 
@@ -290,7 +292,7 @@ plt.imshow(example)
 plt.title(f"It's a {example_target}!")
 plt.show()
 </code></pre>
-        <img class="my-4 md:w-[60%] mx-auto"
+        <img class="my-4 w-[50%] md:w-[30%] mx-auto"
             src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/athree.png') }}"
             alt="It's a 3!">
 
@@ -303,7 +305,8 @@ plt.show()
         Doing that makes sense. If the given number is a 3 and we make the target look like this
         <pre><code>[0 0 0 1 0 0 0 0 0 0]</code></pre>then we essentially tell the NN to be as confident as possible
         that this particular example is a 3. Hopefully, that was understandable (and if not, you can <a
-            href="mailto:mail@arturgalstyan.dev">shoot me a mail</a>).
+            href="mailto:mail@arturgalstyan.dev">shoot me a mail</a> or raise an issue in <a
+            href="https://github.com/Artur-Galstyan/arturgalstyan.dev">GitHub</a>).
 
         <h1>
             Coding - Part 2: Weights and Biases
@@ -328,7 +331,9 @@ for idx, layer in enumerate(nn_architecture):
 
 return parameters
 </code></pre>
-        In the NN architecture we had also defined the activation functions, so let's also code them out.
+        Notice how the shape of the bias is initialised as <span><code>np.random.randn(n_output,)* 0.1</code></span> as
+        we mentioned earlier. This is done so that Numpy can later perform broadcasting. In the NN architecture we had
+        also defined the activation functions, so let's also code them out.
         <pre><code>def sigmoid(Z):
     return 1 / (1 + np.exp(-Z))
     
@@ -339,8 +344,90 @@ def relu(Z):
         With this, everything should be ready for coding out the forward propagation of the NN as <span
             class="text-green-500 cursor-pointer" onclick="performScroll($('#forward-propagation'), 500)">discussed
             earlier</span>.
-    </div>
 
+        <h1>Coding - Part 3: Forward Propagation</h1>
+
+        Before we start coding the forward propagation step, let's first visualise where we are so far. We have 1 NN
+        consisting of 3 layers: the input, hidden and output layer. The input layer has 784 nodes, the hidden layer has
+        16
+        nodes and the output layer has <span class='tooltip' data-tippy-content="One for each class">10 nodes</span>.
+        Then, we also have 2 sets of weights and biases (W&B): the W&Bs between the input and hidden layer and between
+        the hidden and output layer.
+
+        <img class="" src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/summary.jpg') }}"
+            alt="Summary">
+
+        Let's think for a moment what we would really need to compute for forward propagation. In essence, we only need
+        to compute $a_i \quad \forall \quad i=0,1,2$ (this is spoken as "$a_i$ for all $i$ equals 0, 1, 2", or in other
+        words $a_0$, $a_1$, $a_2$). We already know $a_0$, which is simply our training data $X$. Therefore, when we
+        loop over our NN architecture, we can skip the first index and simply start at 1. But that comes later. For now,
+        let's define the forward propagation for a single layer $i$. That would be
+
+        $$
+        \begin{align*}
+        z_i &= a_{i - 1} \cdot W_{i-1 \rightarrow i} + b_i \\
+        a_i &= \sigma (z_i)
+        \end{align*}
+        $$
+
+        In Python code that would be
+        <pre><code class="language-python">def forward_single_layer(a_prev, w, b, activation_function):
+    z = a_prev @ w + b
+    a = activation_function(z)
+        
+    return a, z
+</code></pre>
+
+        Now that we have written the code for a single layer, we need to write a loop, which iterates over our NN
+        architecture and applies this single layer propagation to every layer. Let's define the
+        <span><code>forward</code></span> method for that.
+        <pre><code>def forward(x, nn_parameters, nn_architecture):
+    # If our network has 3 layers, our dictionary has only 2 entries.
+    # Therefore we need to add 1 on top
+    n_layers = len(nn_architecture) + 1
+    # The memory is needed later for backpropagation
+    memory = {}
+    a = x
+
+    # We have 3 layers, 0, 1 and 2 and want to skip 0
+    # Therefore we start at 1
+    for i in range(1, n_layers):
+        a_prev = a
+        activation_function = globals()[nn_architecture[i - 1]["activation"]]
+        w = nn_parameters[f"weights {i-1}->{i}"]
+        b = nn_parameters[f"bias {i}"]
+
+        a, z = forward_single_layer(a_prev, w, b, activation_function)
+
+        memory[f"a_{i - 1}"] = a_prev
+        memory[f"z_{i}"] = z
+
+    return a, memory
+</code></pre>
+
+        Let's try out our NN, which has not been trained yet, to see what it thinks the first number is (hint: it's the
+        "3" that we saw earlier).
+        <pre><code>neural_network = [
+    {"in": 784, "out": 16, "activation": "relu"},
+    {"in": 16, "out": 10, "activation": "sigmoid"},
+]
+X_train, y_train, X_test, y_test = get_mnist()
+parameters = initialise_weights_and_biases(neural_network)
+
+a, memory = forward(X_train[0][0].reshape(1, 784), parameters, neural_network)
+print(f"I'm {np.round(np.max(a) * 100, 2)}% sure that it's a {np.argmax(a)}.")
+print(f"The number was a {np.argmax(y_train[0][0])}")
+</code></pre>
+        <img class="mx-auto my-4"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/nnthought.png') }}"
+            alt="NN Thought">
+
+        It seems our NN was fairly confident that it was a 6, but unfortunately, it was a 3. Now that we have the
+        forward propagation figured out and have written the code for it, it's time to tackle the actual difficult part
+        in NN: backpropagation!
+
+        <h1>Backpropagation</h1>
+    </div>
 </div>
 
 
