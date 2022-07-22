@@ -427,6 +427,55 @@ print(f"The number was a {np.argmax(y_train[0][0])}")
         in NN: backpropagation!
 
         <h1>Backpropagation</h1>
+        In backpropagation (BP) we calculate the error, i.e. the difference between what our NN outputs and what's
+        actually the desired output and then send that error back through the NN to adjust its W&B. For now, let's focus
+        on BP for a single layer before we apply it to the whole network.
+        <img class="md:w-[60%] mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/bp1.jpg') }}"
+            alt="Backpropagation 1">
+
+        We can once again derive the formula for BP by noting what we actually want to compute. We want to calculate
+        <b>the gradients</b> of the weights and biases of our NN. But as someone once said to a pair of shoes: what are
+        those? To understand what a gradient is we need to take a little detour. If you know what a gradient is, you can
+        skip that part.
+
+        <h1>Detour: Gradients</h1>
+
+        First I want to you calculate the derivative of $f(x) = 2x^2$. No problem, right? Obviously, it's $f(x)' = 4x$.
+        Now I want you to calculate the derivative of $f(x, y) = 3y^3 + 2x^2$. At this point you might be confused. The
+        derivative <i>with respect to what variable?</i> A good question. The point is you can only take derivatives
+        w.r.t. a single variable, e.g. $x$ or $y$ in our example. But what if you wanted <i>all</i> the derivatives?
+
+        <br><br>
+
+        That's where gradients come in. A gradient is a vector which contains <i>all</i> the (first) derivatives w.r.t.
+        every variable. In our example, the gradient would be:
+        <img class="md:w-[50%] mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/grad_example.jpg') }}"
+            alt="Example of a Gradient">
+
+        But why would we ever want to compute these? Gradients have the property that they point in the direction
+        <b>of steepest ascend</b>. Take a derivative for example.
+
+        <img class=" mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/grad2.jpg') }}"
+            alt="A Derivative">
+
+        A derivative - in a sense - also points in the direction of steepest ascend but that concept makes little sense
+        in the context of a line, since there is only one direction the line goes. If you wanted to perform gradient
+        descent on this function $f(x) = 2x^2$ to find the value of $x$ which minimises $f$, how would you do it? We
+        know that the gradient (i.e. derivative in the case of only one variable) points in the direction of steepest
+        ascend. If we compute the gradient of $f$ and add that to $x$ then we would <b>increase</b> $f$, which is not
+        what we want. We want $f$ to be as small as possible. Therefore, we subtract from $x$ the gradient of $f$.
+
+        <br><br>
+
+        The same will be done later in our NN, only that $f$ will be the <i>cost function</i> and the gradient contains
+        significantly more entries. But don't fret. It's actually quite simple.
+
+        <h1>Backpropagation (Again)</h1>
+
+        Now that you know what a gradient is, we can continue on our quest to understand BP.
     </div>
 </div>
 

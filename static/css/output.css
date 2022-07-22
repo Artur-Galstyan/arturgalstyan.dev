@@ -728,6 +728,10 @@ span>pre>code.hljs {
   width: 80%;
 }
 
+.w-\[60\%\]{
+  width: 60%;
+}
+
 .transform{
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
@@ -951,12 +955,16 @@ span>pre>code.hljs {
     width: 70%;
   }
 
+  .md\:w-\[30\%\]{
+    width: 30%;
+  }
+
   .md\:w-\[60\%\]{
     width: 60%;
   }
 
-  .md\:w-\[30\%\]{
-    width: 30%;
+  .md\:w-\[50\%\]{
+    width: 50%;
   }
 
   .md\:text-6xl{
