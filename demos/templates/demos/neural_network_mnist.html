@@ -1,1 +1,206 @@
-Hi
+{% extends "base_template.html" %}
+
+{% block header %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/atom-one-light.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
+<script defer>
+
+    function performScroll(element, duration = 1500) {
+        $("html, body").animate({ scrollTop: element.offset().top }, duration);
+    }
+
+    $(window).on("load", function () {
+        setTimeout(() => {
+            $('#spinner').fadeOut(duration = 500)
+        }, 250);
+    })
+    function getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    }
+
+    function isTouchDevice() {
+        return (('ontouchstart' in window) ||
+            (navigator.maxTouchPoints > 0) ||
+            (navigator.msMaxTouchPoints > 0));
+    }
+
+    let waitSentence = ""
+    function setupCanvas() {
+
+        var canvas_position = $('#canvas-wrapper').position()
+        var canvas_size = $('#canvas-wrapper').width()
+        function getClick(e) {
+            let clientX = e.clientX
+            let clientY = e.clientY
+
+            if (e.type == 'touchstart' || e.type == 'touchmove' || e.type == 'touchend' || e.type == 'touchcancel') {
+                var evt = (typeof e.originalEvent === 'undefined') ? e : e.originalEvent;
+                var touch = evt.touches[0] || evt.changedTouches[0];
+                clientX = touch.pageX;
+                clientY = touch.pageY;
+            }
+            return [clientX, clientY]
+        }
+
+        function isClickInCanvas(clicks) {
+            let clientX = clicks[0]
+            let clientY = clicks[1]
+            return (clientX > canvas_position['left'] && clientX < canvas_position['left'] + canvas_size) &&
+                (clientY > canvas_position['top'] && clientY < canvas_position['top'] + canvas_size)
+        }
+
+        function resize() {
+            canvas_size = $('#canvas-wrapper').width()
+            ctx.canvas.width = canvas_size;
+            ctx.canvas.height = canvas_size;
+            canvas_position = $('#canvas-wrapper').position()
+
+        }
+
+        function setPosition(e) {
+
+            let clicks = getClick(e)
+
+            if (isClickInCanvas(clicks)) {
+                canvas_size = $('#canvas-wrapper').width()
+                canvas_position = $('#canvas-wrapper').position()
+                pos.x = clicks[0] - canvas_position['left'];
+                pos.y = clicks[1] - canvas_position['top'];
+            }
+        }
+        let isDrawing = false
+        function draw(e) {
+            if (e.buttons !== 1 && !isTouchDevice()) return;
+            ctx.beginPath();
+
+            ctx.lineWidth = 20;
+
+            if (ctx.canvas.width < 200) {
+                ctx.lineWidth = 10
+            }
+
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#c0392b';
+
+            ctx.moveTo(pos.x, pos.y);
+            setPosition(e);
+            ctx.lineTo(pos.x, pos.y);
+
+            ctx.stroke();
+            isDrawing = true
+        }
+
+        function stopDrawing(e) {
+            isDrawing = false
+        }
+
+        async function setWaitSentence(e) {
+            if (isClickInCanvas(getClick(e))) {
+                waitSentence = await fetch("/api/get_thinking_sentence", { method: "POST" })
+                waitSentence = await waitSentence.json()
+                waitSentence = waitSentence['wait_sentence']
+                $('#status').text(waitSentence)
+            }
+        }
+
+
+        let canvas = $('#canvas')
+        const ctx = canvas[0].getContext('2d');
+        resize(ctx, canvas);
+
+        var pos = { x: 0, y: 0 };
+
+
+        ['mousemove', 'touchmove'].forEach(evt =>
+            document.addEventListener(evt, draw)
+        );
+        ['mousedown', 'touchstart', 'mouseenter'].forEach(evt =>
+            document.addEventListener(evt, setPosition)
+        );
+
+        ['mousedown', 'touchstart'].forEach(evt =>
+            document.addEventListener(evt, setWaitSentence)
+        );
+        ['mouseup', 'touchend'].forEach(evt =>
+            document.addEventListener(evt, stopDrawing)
+        );
+        window.addEventListener('resize', resize);
+
+        setInterval(() => {
+            if ($('#status').text() != "hmmm..." && !isDrawing && $('#status').text().length != 1) {
+                guessTheNumber()
+            }
+        }, 5000);
+
+    }
+
+    function clearCanvas() {
+        let canvas = $('#canvas')
+        var ctx = canvas[0].getContext('2d');
+        ctx.clearRect(0, 0, canvas.width(), canvas.height());
+        $('#status').text("Start drawing some numbers and once you're ready, click on Guess!")
+    }
+    async function guessTheNumber() {
+
+        let canvas = $('#canvas')
+        var ctx = canvas[0].getContext('2d');
+        let imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height).data;
+        let pred = await fetch("/api/get_nn_prediction", {
+            method: "POST",
+            body: JSON.stringify({ imgData: [imageData] })
+        })
+        pred = await pred.json()
+        isDrawing = false
+
+        $('#status').text("hmmm...")
+        setTimeout(() => {
+            $('#status').text(pred['pred'])
+        }, getRandomInt(1000, 2000));
+    }
+    $(document).ready(function () {
+        $('span code').each(function (i, inline) {
+            hljs.highlightBlock(inline);
+        });
+
+        setupCanvas()
+    })
+</script>
+
+
+{% endblock %}
+
+{% block main %}
+{% include 'navbar.html' %}
+{% include 'spinner.html' %}
+
+<div class="mx-auto w-[50%] md:w-[25%]">
+    <div class="text-center text-2xl my-4 flex justify-center h-[12rem] ">
+        <div id="status" class="my-auto">
+            Start drawing some numbers and once you're ready, click on Guess!
+        </div>
+    </div>
+    <div id="canvas-wrapper" class="w-full border-2 border-blue-500">
+        <canvas id="canvas" />
+    </div>
+    <div class="flex justify-center my-4">
+        <div class="w-[50%] rounded-lg bg-emerald-600 text-white hover:bg-emerald-800 duration-300 transition ease-in-out mx-2 cursor-pointer"
+            onclick="clearCanvas()">
+            <div class="m-2 text-xl text-center">
+                Clear
+            </div>
+        </div>
+
+        <div class="w-[50%] rounded-lg bg-blue-600 text-white hover:bg-blue-800 duration-300 transition ease-in-out mx-2 cursor-pointer"
+            onclick="guessTheNumber()">
+            <div class="m-2 text-xl text-center">
+                Guess!
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
