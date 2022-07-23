@@ -16,14 +16,15 @@ nn = NeuralNetwork(nn_params["architecture"])
 nn.parameters = nn_params["parameters"]
 
 
+wait_sentences = []
+parent = pathlib.Path(__file__).resolve().parent / "assets/wait_sentences"
+with open(parent) as file:
+    while line := file.readline().rstrip():
+        wait_sentences.append(line)
+
+
 @api.route("/get_thinking_sentence", methods=["POST"])
 def get_thinking_sentence():
-    wait_sentences = []
-    parent = pathlib.Path(__file__).resolve().parent / "assets/wait_sentences"
-    with open(parent) as file:
-        while line := file.readline().rstrip():
-            wait_sentences.append(line)
-
     return {"wait_sentence": random.choice(wait_sentences)}
 
 
