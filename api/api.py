@@ -10,6 +10,10 @@ from .nn_module import NeuralNetwork
 from sklearn.preprocessing import MinMaxScaler
 
 api = Blueprint("api", __name__)
+path = pathlib.Path(__file__).resolve().parent / "assets/nn_pickle"
+nn_params = pickle.load(open(path, "rb"))
+nn = NeuralNetwork(nn_params["architecture"])
+nn.parameters = nn_params["parameters"]
 
 
 @api.route("/get_thinking_sentence", methods=["POST"])
@@ -21,14 +25,6 @@ def get_thinking_sentence():
             wait_sentences.append(line)
 
     return {"wait_sentence": random.choice(wait_sentences)}
-
-
-def get_nn():
-    path = pathlib.Path(__file__).resolve().parent / "assets/nn_pickle"
-    nn_params = pickle.load(open(path, "rb"))
-    nn = NeuralNetwork(nn_params["architecture"])
-    nn.parameters = nn_params["parameters"]
-    return nn
 
 
 @api.route("/get_nn_prediction", methods=["POST"])
@@ -48,8 +44,6 @@ def get_neural_network_prediction():
     img = min_max_scaler.fit_transform(img)
 
     img = img.reshape(1, 784)
-    nn = get_nn()
-
     a, _ = nn.forward(img)
 
     return json.dumps({"pred": int(np.argmax(a))})
