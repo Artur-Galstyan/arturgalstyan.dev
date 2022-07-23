@@ -229,7 +229,7 @@ def get_mnist(batch_size=64, random_seed=42):
         mnist.data, mnist.target, test_size=0.33, random_state=random_seed
     )
 
-    # Normalises the data
+    # Normalizes the data
     min_max_scaler = MinMaxScaler()
 
     # One-Hot encodes the targets
@@ -241,7 +241,9 @@ def get_mnist(batch_size=64, random_seed=42):
     )
 
     #
-    X_test = split_into_batches(min_max_scaler.fit_transform(np.array(X_test)), 1)
+    X_test = split_into_batches(
+        min_max_scaler.fit_transform(np.array(X_test)), batch_size
+    )
 
     # Turn the targets into Numpy arrays and flatten the array
     y_train = np.array(y_train).reshape(-1, 1)
@@ -254,7 +256,7 @@ def get_mnist(batch_size=64, random_seed=42):
 
     one_hot_encoder.fit(y_test)
     y_test = one_hot_encoder.transform(y_test).toarray()
-    y_test = split_into_batches(np.array(y_test), 1)
+    y_test = split_into_batches(np.array(y_test), batch_size)
 
     return X_train, y_train, X_test, y_test
 
@@ -471,11 +473,195 @@ print(f"The number was a {np.argmax(y_train[0][0])}")
         <br><br>
 
         The same will be done later in our NN, only that $f$ will be the <i>cost function</i> and the gradient contains
-        significantly more entries. But don't fret. It's actually quite simple.
+        significantly more entries. But don't fret. It's actually quite simple. Now that you know what a gradient is, we
+        can continue on our quest to understand BP.
 
         <h1>Backpropagation (Again)</h1>
+        We mentioned before that we want to calculate the gradients of the weights and biases in our NN but how can that
+        be done? For that we have to simplify things to a NN, that has only a single input neuron, weight, bias and
+        output neuron.
 
-        Now that you know what a gradient is, we can continue on our quest to understand BP.
+        <img class="mx-auto" src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/1-5.jpg') }}"
+            alt="A Very Simple Neural Network">
+
+        In the example above, we use the <i>mean squared error</i> (MSE). To calculate the gradient $dW$, we need to use
+        the chain rule. Using the chain rule we can ask <i>how does a little change to $w$ change the error $E$</i>?
+
+        <img class="mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/grad3.jpg') }}"
+            alt="A Very Simple Neural Network - Gradients">
+
+        In case you are not familiar with the chain rule, I would highly advise to go and refresh your knowledge with
+        some YouTube videos on the matter. There are a lot of truly helpful videos that can teach you the essence of the
+        chain rule. Personally, I visualise the chain using the equations. In fact, in the image above, you can kind of
+        see the chain. If you want to know how $E$ changes w.r.t. $w$ (which is a couple of equations away) you have to
+        "find the path" to $w$. In this case you first go to $a_1$, then from $a_1$ to $z_1$ and then finally from $z_1$
+        to $w$. And for each "hop" from a-->b means calculating the partial derivative of a w.r.t. b.
+        <br><br>
+        Luckily, in our case, the partial derivatives are easy to calculate. I will leave it to you to calculate the
+        partial derivative w.r.t. the bias.
+        <img class="mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/grad4.jpg') }}"
+            alt="Gradients">
+        But this is sort of a special case. What do we need for the "general case", i.e. something we could run in a
+        loop. While the middle and right equations above look the same for every layer, the left-most one doesn't.
+
+        <img class="mx-auto" src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/4-5.jpg') }}"
+            alt="Backpropagation">
+
+        In a way, we took the error from the last layer and have sent it back one layer. Note that we need to weight the
+        error by the weights. And with that we have the ingredients to define BP for a single, generic layer.
+
+        $$
+        \begin{align*}
+        \frac{\partial E}{\partial W_{i\rightarrow j}} &= dA_j \cdot \sigma '(z_j) \cdot a_i \\[20pt]
+        \frac{\partial E}{\partial B_{j}} &= dA_j \cdot \sigma '(z_j)
+        \end{align*}
+        $$
+
+        The last thing required is to ensure that we have our dimensionalities right. Take a look at this again:
+        <img class="md:w-[60%] mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/bp1.jpg') }}"
+            alt="Backpropagation 1">
+
+        To multiply the delta of the next layer with the weights, we need to <b>transpose</b> the weight matrix, such
+        that the dimensions of our matrices fit.
+
+        <img class="md:w-[70%] mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/5-2.jpg') }}"
+            alt="Backpropagation 2">
+
+
+        <h1>Coding - Part 4: Backpropagation</h1>
+        Now that we know the math of BP for a single layer, it's time to write that out in Python.
+        <pre><code>def backpropagation_single_layer(dA, w, z, a_prev, activation_function):
+    m = a_prev.shape[0]
+    backprop_activation = globals()[f"{activation_function}_backward"]
+
+    delta = backprop_activation(dA, z)
+    dW = (a_prev.T @ delta) / m
+    dB = np.sum(delta, axis=1, keepdims=True) / m
+    dA_prev = delta @ w.T
+
+    return dW, dB, dA_prev
+</code></pre>
+
+        We also need the derivatives of our activation functions. I'll save some time by skipping their derivations,
+        since there are several activation functions and the derivations of their derivatives don't really add anything
+        to the
+        understanding of a NN. Just know that you need the derivative of these activation functions.
+
+        <pre><code>def sigmoid_backward(dA, Z):
+    sig = sigmoid(Z)
+    return dA * sig * (1 - sig)
+        
+        
+def relu_backward(dA, Z):
+    dZ = np.array(dA, copy=True)
+    dZ[Z <= 0] = 0
+    return dZ
+</code></pre>
+
+        Now that we have defined BP for a single layer, it's time to put that in a loop and to iterate over all our
+        layers.
+
+        <pre><code>def backward(target, prediction, memory, param_values, nn_architecture):
+    gradients = {}
+    dA_prev = 2 * (prediction - target)
+    # If our network has 3 layers, our dictionary has only 2 entries.
+    # Therefore we need to add 1 on top
+    n_layers = len(nn_architecture) + 1
+
+    # Loop backwards
+    for i in reversed(range(1, n_layers)):
+        dA = dA_prev
+
+        # Memory from the forward propagation step
+        a_prev = memory[f"a_{i-1}"]
+        z = memory[f"z_{i}"]
+
+        w = param_values[f"weights {i-1}->{i}"]
+
+        dW, dB, dA_prev = backpropagation_single_layer(
+            dA, w, z, a_prev, nn_architecture[i - 1]["activation"]
+        )
+
+        gradients[f"dW_{i-1}->{i}"] = dW
+        gradients[f"dB_{i}"] = dB
+
+    return gradients
+</code></pre>
+
+        With that, the last step is to update our weights and biases. Remember: if we add the gradient (which is the
+        direction of steepest ascend) we would increase the error. Therefore, we need to subtract the gradients. But not
+        the whole gradient though. We multiply the gradient with a learning rate $\alpha = 0.1$ to make the changes in
+        our NN not so abrupt and rather slow and steady.
+
+        <pre><code>def update(param_values, gradients, nn_architecture, learning_rate):
+    n_layers = len(nn_architecture) + 1
+    for i in range(1, n_layers):
+        param_values[f"weights {i-1}->{i}"] -= (
+            learning_rate * gradients[f"dW_{i-1}->{i}"]
+        )
+        param_values[f"bias {i}"] -= learning_rate * gradients[f"dB_{i}"].mean()
+    return param_values
+</code></pre>
+
+        <h1>Testing our Neural Network</h1>
+
+        The code is almost finished. All that's left is to verify that everything works. For that, the validation data
+        will come into play. Let's write some code that gives us the current accuracy of our NN.
+
+        <pre><code>def get_current_accuracy(param_values, nn_architecture, X_test, y_test):
+    correct = 0
+    total_counter = 0
+    for x, y in zip(X_test, y_test):
+        a, _ = forward(x, param_values, nn_architecture)
+        pred = np.argmax(a, axis=1, keepdims=True)
+        y = np.argmax(y, axis=1, keepdims=True)
+        correct += (pred == y).sum()
+        total_counter += len(x)
+    accuracy = correct / total_counter
+    return accuracy
+</code></pre>
+
+        And now, let's write our final training loop to see how well we are performing.
+        <pre><code>def main():
+    neural_network = [
+        {"in": 784, "out": 16, "activation": "relu"},
+        {"in": 16, "out": 10, "activation": "sigmoid"},
+    ]
+    X_train, y_train, X_test, y_test = get_mnist()
+    parameters = initialise_weights_and_biases(neural_network)
+
+    n_epochs = 50
+    learning_rate = 0.1
+    for epoch in range(n_epochs):
+        for x, y in zip(X_train, y_train):
+            a, memory = forward(x, parameters, neural_network)
+            grads = backward(y, a, memory, parameters, neural_network)
+            update(parameters, grads, neural_network, learning_rate)
+        accuracy = get_current_accuracy(parameters, neural_network, X_test, y_test)
+        print(f"Epoch {epoch} Accuracy = {np.round(accuracy, 4) * 100}%")
+</code></pre>
+
+        And here's the final performance of our little network. Impressively, it managed to get an accuracy of over 94%
+        with just a single hidden layer. You can play around with the code to add more layers to see if you can improve
+        the performance.
+
+        <img class="md:w-[40%] mx-auto"
+            src="{{ url_for('static', filename='images/blog_posts/neural_network_in_numpy/performance.png') }}"
+            alt="Final Performance">
+
+        That's it! We coded a neural network with nothing but our bare hands. <a
+            href="{{url_for('demos_bp.neural_network_mnist')}}">Here</a> is an interactive demo of our NN. There you can
+        play around with the NN and see if it can identify your handwriting too. And <a
+            href="https://github.com/Artur-Galstyan/feedforward_neural_network">here's</a> the code of this project.
+
+        <br><br>
+
+        Thanks a lot for reading this post and I will see you in the next one.
+
     </div>
 </div>
 
